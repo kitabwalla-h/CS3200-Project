@@ -26,44 +26,51 @@ CREATE TABLE HuskyEatzEmployee (
   LastName varchar(128)
 );
 
-CREATE TABLE Restaurant/Vendor (
-  RestaurantID INTEGER PRIMARY KEY,
-  RestaurantName varchar(128),
+CREATE TABLE Vendor (
+  VendorID INTEGER PRIMARY KEY,
+  VendorName varchar(128),
+  VendorType varchar(128),
   CuisineType varchar(128),
   Phone varchar(128),
   Email varchar(128),
-  OpeningTime INTEGER,
-  ClosingTime INTEGER,
   Street varchar(128),
   City varchar(128),
   State varchar(128),
   ZipCode varchar(128)
+  EmployeeID INTEGER,
+  FOREIGN KEY (EmployeeID) REFERENCES HuskyEatzEmployee(EmployeeID)
+);
+
+CREATE TABLE Hours (
+  VendorID INTEGER,
+  OpeningTime TIME,
+  ClosingTime TIME,
+  FOREIGN KEY (VendorID) REFERENCES Vendor(VendorID)
+);
+
+CREATE TABLE Location (
+  VendorID INTEGER,
+  Street varchar(128),
+  City varchar(128),
+  `State` varchar(128),
+  ZipCode varchar(128),
+  FOREIGN KEY (VendorID) REFERENCES Vendor(VendorID)
 );
 
 CREATE TABLE Menu (
   MenuID INTEGER PRIMARY KEY,
   Name varchar(128),
-  MenuStartTime INTEGER,
-  MenuEndTime INTEGER,
   RestaurantID INTEGER,
+  FOREIGN KEY (RestaurantID) REFERENCES Vendor(RestaurantID)
 );
 
-CREATE TABLE MenuItems (
-  MenuItemID INTEGER PRIMARY KEY,
-  Name varchar(128),
-  Ingredients varchar(500),
-  Availibility BOOLEAN,
-  Price INTEGER,
-  Description varchar(128),
-  AllergenInformation varchar(128),
+CREATE TABLE AvailibilityPeriod (
   MenuID INTEGER,
+  MenuStartTime TIME,
+  MenuEndTime TIME,
+  FOREIGN KEY (MenuID) REFERENCES Menu(MenuID)
 );
 
--- CREATE TABLE OrderDeatils (
---   OrderId INTEGER PRIMARY KEY,
---   OrderTotal INTEGER,
---   OrderTime DATETIME,
--- );
 
 CREATE TABLE Customer (
   CustomerID INTEGER PRIMARY KEY,
@@ -88,16 +95,56 @@ CREATE TABLE TransportationID (
   Color varchar(128),
   RegistrationNumber INTEGER,
   Type varchar(128),
+  DeliveryPersonID INTEGER,
+  FOREIGN KEY (DeliveryPersonID) REFERENCES DeliveryPeople(DeliveryPersonID)
 );
 
 CREATE TABLE Order (
   OrderID INTEGER PRIMARY KEY,
   TotalSale INTEGER,
   RestaurantID INTEGER,
-  DeliveryDate varchar(128),
+  DeliveryDate DATETIME,
   CustomerID INTEGER
+  DeliveryPeopleID INTEGER,
+  FOREIGN KEY (RestaurantID) REFERENCES Restaurant(RestaurantID),
+  FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+  FOREIGN KEY (DeliveryPeopleID) REFERENCES DeliveryPeople(DeliveryPeopleID)
 );
 
+
+CREATE TABLE OrderDeatils (
+  OrderID INTEGER,
+  OrderDetailsID INTEGER PRIMARY KEY,
+  OrderTotal INTEGER,
+  OrderTime DATETIME,
+  FOREIGN KEY (OrderID) REFERENCES Order(OrderID)
+);
+
+CREATE TABLE OrderStatus (
+  OrderID INTEGER,
+  EstimatedDeliveryTime DATETIME,
+  ActualDeliveryTime DATETIME,
+  `Status` varchar(128),
+  FOREIGN KEY (OrderID) REFERENCES Order(OrderID)
+);
+
+CREATE TABLE MenuItemsInOrder (
+  MenuItemId INTEGER,
+  OrderID INTEGER,
+  FOREIGN KEY (MenuItemId) REFERENCES MenuItems(MenuItemId),
+  FOREIGN KEY (OrderID) REFERENCES Order(OrderID)
+);
+
+CREATE TABLE MenuItems (
+  `Name` varchar(128),
+  Ingredients varchar(500),
+  Availibility BOOLEAN,
+  Price INTEGER,
+  Description varchar(128),
+  AllergenInformation varchar(128),
+  MenuID INTEGER,
+  FOREIGN KEY (MenuID) REFERENCES Menu(MenuID)
+);
 
 
 
