@@ -47,6 +47,7 @@ CREATE TABLE VendorLocations (
   City varchar(128) NOT NULL ,
   `State` varchar(128) NOT NULL ,
   ZipCode varchar(128) NOT NULL ,
+  PRIMARY KEY (VendorID, Street),
   FOREIGN KEY (VendorID) REFERENCES Vendor(VendorID)
        ON UPDATE CASCADE ON DELETE RESTRICT
 );
@@ -61,6 +62,9 @@ CREATE TABLE Menu (
 
 CREATE TABLE Customer (
   CustomerID INTEGER PRIMARY KEY AUTO_INCREMENT,
+  FirstName varchar(128) NOT NULL ,
+  LastName varchar(128) NOT NULL ,
+  Phone varchar(128) NOT NULL,
   Email varchar(128) NOT NULL
 );
 
@@ -71,6 +75,7 @@ CREATE TABLE CustomerLocations (
   City varchar(128) NOT NULL,
   `State` varchar(128) NOT NULL,
   ZipCode varchar(128) NOT NULL,
+  PRIMARY KEY (CustomerID, Street),
   FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
                                ON UPDATE CASCADE ON DELETE RESTRICT
 );
@@ -117,10 +122,11 @@ CREATE TABLE OrderDetails (
 );
 
 CREATE TABLE OrderStatus (
-  OrderDetailsID INTEGER AUTO_INCREMENT,
+  OrderDetailsID INTEGER NOT NULL,
   EstimatedDeliveryTime DATETIME NOT NULL,
   ActualDeliveryTime DATETIME,
   `Status` varchar(128) NOT NULL ,
+  PRIMARY KEY (OrderDetailsID, EstimatedDeliveryTime),
   FOREIGN KEY (OrderDetailsID) REFERENCES OrderDetails(OrderDetailsID)
                          ON UPDATE CASCADE ON DELETE RESTRICT
 );
@@ -133,13 +139,19 @@ CREATE TABLE MenuItems (
   Description varchar(128) NOT NULL,
   AllergenInformation varchar(128) NOT NULL,
   MenuID INTEGER NOT NULL,
-  OrderDetailsID INTEGER NOT NULL,
   FOREIGN KEY (MenuID) REFERENCES Menu(MenuID)
-                       ON UPDATE CASCADE ON DELETE RESTRICT,
-  FOREIGN KEY (OrderDetailsID) REFERENCES OrderDetails(OrderDetailsID)
                        ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
+CREATE TABLE MenuItemsInOrder (
+    OrderDetailsID INTEGER NOT NULL,
+    MenuItemName varchar(128) NOT NULL,
+    PRIMARY KEY (OrderDetailsID, MenuItemName),
+    FOREIGN KEY (OrderDetailsID) REFERENCES OrderDetails(OrderDetailsID)
+                    ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (MenuItemName) REFERENCES MenuItems(`Name`)
+                    ON UPDATE CASCADE ON DELETE RESTRICT
+);
 
 -- Add sample data. 
 
@@ -163,10 +175,10 @@ INSERT INTO Menu (Name, VendorID) VALUES ('Tatte Menu', 2);
 INSERT INTO Menu (Name, VendorID) VALUES ('Steast Menu', 3);
 INSERT INTO Menu (Name, VendorID) VALUES ('International Village Menu', 4);
 
-INSERT INTO Customer(Email) VALUES ('michelle.v@example.com');
-INSERT INTO Customer(Email) VALUES ('elizabeth.j@example.com');
-INSERT INTO Customer(Email) VALUES ('hani.k@example.com');
-INSERT INTO Customer(Email) VALUES ('eva.b@example.com');
+INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('michelle.v@example.com', 'Michelle', 'V', '987-765-5432');
+INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('elizabeth.j@example.com', 'Elizabeth', 'J', '123-345-5678');
+INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('hani.k@example.com', 'Hani', 'K', '432-654-3456');
+INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('eva.b@example.com', 'Eva', 'B', '654-432-4321');
 
 INSERT INTO CustomerLocations(CustomerID, Street, City, State, ZipCode) VALUES (1, ' 123 Burke Ave', 'Boston', 'MA', 02115);
 INSERT INTO CustomerLocations(CustomerID, Street, City, State, ZipCode) VALUES (2, ' 567 Hemingway St', 'Boston', 'MA', 02115);
@@ -193,12 +205,17 @@ INSERT INTO OrderDetails(OrderID, OrderTotal) VALUES (2, 2);
 INSERT INTO OrderDetails(OrderID, OrderTotal) VALUES (3, 3);
 INSERT INTO OrderDetails(OrderID, OrderTotal) VALUES (4, 4);
 
-INSERT INTO OrderStatus(EstimatedDeliveryTime, ActualDeliveryTime, Status) VALUES ('2023-03-16 10:23:10', '2023-03-16 10:22:10', 'Delivered');
-INSERT INTO OrderStatus(EstimatedDeliveryTime, Status) VALUES ('2023-03-16 23:19:48', 'In Progress');
-INSERT INTO OrderStatus(EstimatedDeliveryTime, Status) VALUES ('2023-03-16 10:23:10',  'In Transit');
-INSERT INTO OrderStatus(EstimatedDeliveryTime, Status) VALUES ('2023-03-16 10:23:10','Canceled');
+INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, ActualDeliveryTime, Status) VALUES (1, '2023-03-16 10:23:10', '2023-03-16 10:22:10', 'Delivered');
+INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, Status) VALUES (2, '2023-03-16 23:19:48', 'In Progress');
+INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, Status) VALUES (3, '2023-03-16 10:23:10',  'In Transit');
+INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, `Status`) VALUES (4, '2023-03-16 10:23:10','Canceled');
 
-INSERT INTO MenuItems VALUES ('Pesto Pasta', 'Pesto, Pasta', TRUE, 15.99, 'Pesto Pasta', 'Vegan, Contains Nuts' , 1, 1);
-INSERT INTO MenuItems VALUES ('Greek Salad', 'Lettuce, Tomato, Onion, Feta, Greek Dressing', TRUE, 10.99, 'Greek Salad', 'Vegan, Dairy Free, Gluten Free, Nut Free' , 2, 2);
-INSERT INTO MenuItems VALUES ('Burrito', 'Tortilla, Beans. Cheese', TRUE, 12.99, 'Been and Cheese Burrito', 'Contains Gluten, Contains Dairy, Nut Free' , 3, 3);
-INSERT INTO MenuItems VALUES ('Grilled Cheese', 'Bread, Cheese, Butter', FALSE, 7.99, 'Grilled Cheese', 'Contains Gluten, Contains Dairy, Nut Free' , 4, 4);
+INSERT INTO MenuItems VALUES ('Pesto Pasta', 'Pesto, Pasta', TRUE, 15.99, 'Pesto Pasta', 'Vegan, Contains Nuts' , 1);
+INSERT INTO MenuItems VALUES ('Greek Salad', 'Lettuce, Tomato, Onion, Feta, Greek Dressing', TRUE, 10.99, 'Greek Salad', 'Vegan, Dairy Free, Gluten Free, Nut Free' , 2);
+INSERT INTO MenuItems VALUES ('Burrito', 'Tortilla, Beans. Cheese', TRUE, 12.99, 'Been and Cheese Burrito', 'Contains Gluten, Contains Dairy, Nut Free' , 3);
+INSERT INTO MenuItems VALUES ('Grilled Cheese', 'Bread, Cheese, Butter', FALSE, 7.99, 'Grilled Cheese', 'Contains Gluten, Contains Dairy, Nut Free' , 4);
+
+INSERT INTO MenuItemsInOrder VALUES (1, 'Pesto Pasta');
+INSERT INTO MenuItemsInOrder VALUES (2, 'Burrito');
+INSERT INTO MenuItemsInOrder VALUES (3, 'Greek Salad');
+INSERT INTO MenuItemsInOrder VALUES (4, 'Greek Salad');
