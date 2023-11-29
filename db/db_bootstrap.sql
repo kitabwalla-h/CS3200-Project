@@ -60,7 +60,10 @@ CREATE TABLE Menu (
 
 CREATE TABLE Customer (
   CustomerID INTEGER PRIMARY KEY AUTO_INCREMENT,
-  Email varchar(128) NOT NULL
+  FirstName varchar(128) NOT NULL,
+  LastName varchart(128) NOT NULL,
+  Email varchar(128) NOT NULL,
+  Phone varchar(128) NOT NULL
 );
 
 
