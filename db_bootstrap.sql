@@ -62,12 +62,11 @@ CREATE TABLE Menu (
 
 CREATE TABLE Customer (
   CustomerID INTEGER PRIMARY KEY AUTO_INCREMENT,
-  FirstName varchar(128) NOT NULL ,
-  LastName varchar(128) NOT NULL ,
+  FirstName varchar(128) NOT NULL,
+  LastName varchar(128) NOT NULL,
   Phone varchar(128) NOT NULL,
   Email varchar(128) NOT NULL
 );
-
 
 CREATE TABLE CustomerLocations (
   CustomerID INTEGER NOT NULL,
@@ -144,13 +143,13 @@ CREATE TABLE MenuItems (
 );
 
 CREATE TABLE MenuItemsInOrder (
-    OrderDetailsID INTEGER NOT NULL,
-    MenuItemName varchar(128) NOT NULL,
-    PRIMARY KEY (OrderDetailsID, MenuItemName),
-    FOREIGN KEY (OrderDetailsID) REFERENCES OrderDetails(OrderDetailsID)
-                    ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (MenuItemName) REFERENCES MenuItems(`Name`)
-                    ON UPDATE CASCADE ON DELETE RESTRICT
+  OrderDetailsID INTEGER NOT NULL,
+  MenuItemName varchar(128),
+  PRIMARY KEY (OrderDetailsID, MenuItemName),
+  FOREIGN KEY (OrderDetailsID) REFERENCES OrderDetails(OrderDetailsID)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  FOREIGN KEY (MenuItemName) REFERENCES MenuItems(`Name`)
+    ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 -- Add sample data. 
@@ -175,10 +174,10 @@ INSERT INTO Menu (Name, VendorID) VALUES ('Tatte Menu', 2);
 INSERT INTO Menu (Name, VendorID) VALUES ('Steast Menu', 3);
 INSERT INTO Menu (Name, VendorID) VALUES ('International Village Menu', 4);
 
-INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('michelle.v@example.com', 'Michelle', 'V', '987-765-5432');
-INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('elizabeth.j@example.com', 'Elizabeth', 'J', '123-345-5678');
-INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('hani.k@example.com', 'Hani', 'K', '432-654-3456');
-INSERT INTO Customer(Email, FirstName, LastName, Phone) VALUES ('eva.b@example.com', 'Eva', 'B', '654-432-4321');
+INSERT INTO Customer(FirstName, LastName, Phone, Email) VALUES ('Joe', 'Miller', '123-456-7890', 'joe@example.com');
+INSERT INTO Customer(FirstName, LastName, Phone, Email) VALUES ('Alice', 'Smith', '876-123-8765', 'alice@example.com');
+INSERT INTO Customer(FirstName, LastName, Phone, Email) VALUES ('Bob', 'Jackson', '123-765-2345', 'bob@example.com');
+INSERT INTO Customer(FirstName, LastName, Phone, Email) VALUES ('Jane', 'Smith', '234-654-8734', 'jane@example.com');
 
 INSERT INTO CustomerLocations(CustomerID, Street, City, State, ZipCode) VALUES (1, ' 123 Burke Ave', 'Boston', 'MA', 02115);
 INSERT INTO CustomerLocations(CustomerID, Street, City, State, ZipCode) VALUES (2, ' 567 Hemingway St', 'Boston', 'MA', 02115);
@@ -208,7 +207,7 @@ INSERT INTO OrderDetails(OrderID, OrderTotal) VALUES (4, 4);
 INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, ActualDeliveryTime, Status) VALUES (1, '2023-03-16 10:23:10', '2023-03-16 10:22:10', 'Delivered');
 INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, Status) VALUES (2, '2023-03-16 23:19:48', 'In Progress');
 INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, Status) VALUES (3, '2023-03-16 10:23:10',  'In Transit');
-INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, `Status`) VALUES (4, '2023-03-16 10:23:10','Canceled');
+INSERT INTO OrderStatus(OrderDetailsID, EstimatedDeliveryTime, Status) VALUES (4, '2023-03-16 10:23:10','Canceled');
 
 INSERT INTO MenuItems VALUES ('Pesto Pasta', 'Pesto, Pasta', TRUE, 15.99, 'Pesto Pasta', 'Vegan, Contains Nuts' , 1);
 INSERT INTO MenuItems VALUES ('Greek Salad', 'Lettuce, Tomato, Onion, Feta, Greek Dressing', TRUE, 10.99, 'Greek Salad', 'Vegan, Dairy Free, Gluten Free, Nut Free' , 2);
@@ -216,6 +215,6 @@ INSERT INTO MenuItems VALUES ('Burrito', 'Tortilla, Beans. Cheese', TRUE, 12.99,
 INSERT INTO MenuItems VALUES ('Grilled Cheese', 'Bread, Cheese, Butter', FALSE, 7.99, 'Grilled Cheese', 'Contains Gluten, Contains Dairy, Nut Free' , 4);
 
 INSERT INTO MenuItemsInOrder VALUES (1, 'Pesto Pasta');
-INSERT INTO MenuItemsInOrder VALUES (2, 'Burrito');
-INSERT INTO MenuItemsInOrder VALUES (3, 'Greek Salad');
-INSERT INTO MenuItemsInOrder VALUES (4, 'Greek Salad');
+INSERT INTO MenuItemsInOrder VALUES (2, 'Greek Salad');
+INSERT INTO MenuItemsInOrder VALUES (3, 'Burrito');
+INSERT INTO MenuItemsInOrder VALUES (4, 'Grilled Cheese');
