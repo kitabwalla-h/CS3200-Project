@@ -35,16 +35,16 @@ def create_app():
     # Import the various Beluprint Objects
     from src.customers.customers import customers
     from src.vendors.vendors  import vendors
-    from src.employees.employees  import employees
-    from src.orders.orders  import orders
+    # from src.employees.employees  import employees
+    # from src.orders.orders  import orders
 
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
     app.register_blueprint(customers,   url_prefix='/c')
     app.register_blueprint(vendors,    url_prefix='/v')
-    app.register_blueprint(employees,    url_prefix='/e')
-    app.register_blueprint(orders,    url_prefix='/o')
+    # app.register_blueprint(employees,    url_prefix='/e')
+    # app.register_blueprint(orders,    url_prefix='/o')
 
 
     # Don't forget to return the app object
