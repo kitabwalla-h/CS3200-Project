@@ -31,21 +31,23 @@ def get_products():
 
     return jsonify(json_data)
 
-# # get specific vendor details
-# @vendors.route('/vendors/<vendor_id>', methods=['GET'])
-# def get_vendor_detail (vendor_id):
+# get specific vendor details
+@vendors.route('/vendors/<vendor_id>', methods=['GET'])
+def get_vendor_detail (vendor_id):
 
-#     query = 'SELECT * FROM Vendor WHERE VendorID = ' + str(vendor_id)
-#     current_app.logger.info(query)
+    query = 'SELECT * FROM Vendor WHERE VendorID = ' + str(vendor_id)
+    current_app.logger.info(query)
 
-#     cursor = db.get_db().cursor()
-#     cursor.execute(query)
-#     column_headers = [x[0] for x in cursor.description]
-#     json_data = []
-#     the_data = cursor.fetchall()
-#     for row in the_data:
-#         json_data.append(dict(zip(column_headers, row)))
-#     return jsonify(json_data)
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    the_data = cursor.fetchall()
+    for row in the_data:
+        json_data.append(dict(zip(column_headers, row)))
+    return jsonify(json_data)
+
+
 
 # # get vendors under a specific vendor type
 # @vendors.route('/vendors/<vendor_type>', methods=['GET'])
@@ -279,3 +281,42 @@ def get_products():
 # #         json_data.append(dict(zip(column_headers, row)))
     
 # #     return jsonify(json_data)
+
+@vendors.route('/vendors/<vendor_id>', methods=['PUT'])
+def update_vendor(VendorID):
+    
+    # collecting data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+
+    #extracting the variable
+    vendor_name = the_data['vendor_name']
+    vendor_type = the_data['vendor_type']
+    cuisine_type = the_data['cuisine_type']
+    phone = the_data['phone']
+    email = the_data['email']
+    employee_id = the_data['employee_id']
+
+    # Constructing the query
+    query = 'update Vendor SET '
+    query += 'VendorName = "' + vendor_name + '", '
+    query += 'VendorType = "' + vendor_type + '", '
+    query += 'CuisineType = " ' + cuisine_type + '", '
+    query += 'Phone = " ' + phone + '", '
+    query += 'EmployeeID = " ' + employee_id + '", '
+    query += 'Email = "' + email + '" WHERE VendorID = ' + str(VendorID) + ';' 
+    current_app.logger.info(query)
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    return 'Success!'
+
+@vendors.route('/vendors/<vendor_id>', methods=['DELETE'])
+def delete_vendor(VendorID):
+    cursor = db.get_db().cursor()
+    cursor.execute('DELETE FROM Vendor WHERE VendorID = ' + str(VendorID) + ';')
+    db.get_db().commit()
+    return 'Success!'
