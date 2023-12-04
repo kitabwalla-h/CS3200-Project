@@ -36,7 +36,7 @@ def create_app():
     from src.customers.customers import customers
     from src.vendors.vendors  import vendors
     # from src.employees.employees  import employees
-    # from src.orders.orders  import orders
+    from src.orders.orders  import orders
 
 
     # Register the routes from each Blueprint with the app object
@@ -44,7 +44,7 @@ def create_app():
     app.register_blueprint(customers,   url_prefix='/c')
     app.register_blueprint(vendors,    url_prefix='/v')
     # app.register_blueprint(employees,    url_prefix='/e')
-    # app.register_blueprint(orders,    url_prefix='/o')
+    app.register_blueprint(orders,    url_prefix='/o')
 
 
     # Don't forget to return the app object

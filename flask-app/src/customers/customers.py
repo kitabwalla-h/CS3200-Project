@@ -75,6 +75,7 @@ def update_customer(CustomerID):
     last_name = the_data['last_name']
     phone = the_data['phone']
     email = the_data['email']
+    
 
     # Constructing the query
     query = 'update Customer SET '

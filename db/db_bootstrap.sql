@@ -36,7 +36,7 @@ CREATE TABLE Vendor (
   CuisineType varchar(128) NOT NULL ,
   Phone varchar(128) NOT NULL UNIQUE,
   Email varchar(128) NOT NULL UNIQUE,
-  EmployeeID INTEGER NOT NULL UNIQUE,
+  EmployeeID INTEGER NOT NULL,
   FOREIGN KEY (EmployeeID) REFERENCES HuskyEatzEmployee(EmployeeID)
         ON UPDATE CASCADE ON DELETE RESTRICT
 );
@@ -96,7 +96,7 @@ CREATE TABLE DeliveryTransportation (
                                     ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-CREATE TABLE `Order` (
+CREATE TABLE Order (
   OrderID INTEGER PRIMARY KEY AUTO_INCREMENT,
   TotalSale DECIMAL(10,2) NOT NULL ,
   VendorID INTEGER NOT NULL ,
@@ -161,7 +161,7 @@ INSERT INTO HuskyEatzEmployee(Role, FirstName, LastName) VALUES ('Data Scientist
 
 INSERT INTO Vendor(VendorName, VendorType, CuisineType, Phone, Email, EmployeeID) VALUES ('El Jefes', 'Restaurant', 'Mexican', '123-456-7890', 'eljefes@example.com', 1);
 INSERT INTO Vendor(VendorName, VendorType, CuisineType, Phone, Email, EmployeeID) VALUES ('Tatte', 'Restaurant', 'Cafe', '098-654-0321', 'tatte@example.com', 2);
-INSERT INTO Vendor(VendorName, VendorType, CuisineType, Phone, Email, EmployeeID) VALUES ('Steast', 'Dining Hall', 'Dining Hall', '098-765-4321', 'steast@example.com', 3);
+INSERT INTO Vendor(VendorName, VendorType, CuisineType, Phone, Email, EmployeeID) VALUES ('Steast', 'Dining Hall', 'Dining Hall', '098-765-4321', 'steast@example.com', 2);
 INSERT INTO Vendor(VendorName, VendorType, CuisineType, Phone, Email, EmployeeID) VALUES ('International Village', 'Dining Hall', 'Dining Hall', '123-987-7654', 'iv@example.com', 4);
 
 INSERT INTO VendorLocations(VendorID, Street, City, State, ZipCode) VALUES (1, ' 123 Columbus Ave', 'Boston', 'MA', 02120);
@@ -194,10 +194,10 @@ INSERT INTO DeliveryTransportation(Color, Type, RegistrationNumber, DeliveryPers
 INSERT INTO DeliveryTransportation(Color, Type, RegistrationNumber, DeliveryPersonID) VALUES ('Yellow', 'Skateboard',  78904321, 3);
 INSERT INTO DeliveryTransportation(Color, Type, RegistrationNumber, DeliveryPersonID) VALUES ('Black', 'Limo', 76543098, 4);
 
-INSERT INTO `Order`( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (20.36, 1, 1, 1);
-INSERT INTO `Order`( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (100.78, 2, 2, 2);
-INSERT INTO `Order`( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (74.28, 3, 3, 3);
-INSERT INTO `Order`( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (52.95, 4, 4, 4);
+INSERT INTO Order ( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (20.36, 1, 1, 1);
+INSERT INTO Order ( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (100.78, 2, 2, 2);
+INSERT INTO Order ( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (74.28, 3, 3, 3);
+INSERT INTO Order ( TotalSale, VendorID, CustomerID, DeliveryPersonID) VALUES (52.95, 4, 4, 4);
 
 INSERT INTO OrderDetails(OrderID, OrderTotal) VALUES (1, 1);
 INSERT INTO OrderDetails(OrderID, OrderTotal) VALUES (2, 2);
