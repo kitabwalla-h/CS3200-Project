@@ -12,7 +12,7 @@ def get_orders_by_vendor(vendor_id):
     cursor = db.get_db().cursor()
 
     # use cursor to query the database for a list of products
-    query = 'SELECT * FROM Order WHERE VendorID = ' + str(vendor_id) + ' ;'
+    query = 'SELECT * FROM `Order` WHERE VendorID = ' + str(vendor_id) + ' ;'
     cursor.execute(query)
 
     # grab the column headers from the returned data
@@ -59,3 +59,68 @@ def get_order_status(order_details_id):
         json_data.append(dict(zip(column_headers, row)))
 
     return jsonify(json_data)
+
+#POST
+#add new order
+@orders.route('/orders', methods = ['POST'])
+def add_new_order():
+    # collecting data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+
+    #extracting the variable
+    total = the_data['TotalSale']
+    vendor = the_data['VendorID']
+    date = the_data['DeliveryDate']
+    customer = the_data['CustomerID']
+    delivery = the_data['DeliveryPersonID']
+
+    # Constructing the query
+    query = 'insert into `Order` (TotalSale, VendorID, DeliveryDate, CustomerID, DeliveryPersonID) values ("{}", "{}", "{}", "{}", "{}");'.format(total, vendor, date, customer, delivery)
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    return 'Success!'
+
+
+#PUT
+#update order 
+@orders.route('/orders/<OrderID>', methods=['PUT'])
+def update_customer(OrderID):
+    # collecting data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
+    #extracting the variable
+    total = the_data['TotalSale']
+    vendor = the_data['VendorID']
+    date = the_data['DeliveryDate']
+    customer = the_data['CustomerID']
+    delivery = the_data['DeliveryPersonID']
+
+    # Constructing the query
+    query = 'update `Order` SET TotalSale = "{}", VendorID = "{}",  DeliveryDate = "{}", CustomerID = "{}", DeliveryPersonID = "{}";'.format(total, vendor, date, customer, delivery)
+
+    current_app.logger.info(query)
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    return 'Success!'
+
+
+
+#DELETE
+#remove an order 
+@orders.route('/orders/<OrderID>', methods=['DELETE'])
+def delete_order(OrderID):
+    cursor = db.get_db().cursor()
+    cursor.execute('DELETE FROM `Order` WHERE OrderID = ' + str(OrderID) + ';')
+    db.get_db().commit()
+    return 'Success!'
+
+
