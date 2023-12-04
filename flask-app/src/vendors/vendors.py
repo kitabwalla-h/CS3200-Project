@@ -84,7 +84,7 @@ def get_vendor_detail (cuisine_type):
 @vendors.route('/vendors/prices/<vendor_id>/<menu_id>',  methods=['GET'])
 def get_menu_prices(vendor_id, menu_id):
     cursor = db.get_db().cursor()
-    query = 'SELECT mi.Name, mi.Price FROM Vendor v JOIN Menu m on v.VendorID = m.VendorID'
+    query = 'SELECT mi.Name, mi.Price, mi.Ingredients, mi.Availability, mi.Description, mi.AllergenInformation FROM Vendor v JOIN Menu m on v.VendorID = m.VendorID'
     query = query + ' JOIN MenuItems mi on mi.MenuID = m.MenuID'
     query = query + ' WHERE (v.VendorID = ' + str(vendor_id) + ' and m.MenuID = ' + str(menu_id)
     query = query + ') ORDER BY mi.Price DESC;'
@@ -108,15 +108,15 @@ def get_menu_prices(vendor_id, menu_id):
     return jsonify(json_data)
 
 # get the list menu items from a specific menu
-@vendors.route('/vendors/menu/<vendor_id>/<menu_id>', methods=['GET'])
-def get_menu_from_vendor(vendor_id, menu_id):
+@vendors.route('/vendors/menu/', methods=['GET'])
+def get_menu_from_vendor():
     cursor = db.get_db().cursor()
     query = '''
-        SELECT mi.Name, mi.Price
+        SELECT v.VendorID, v.VendorName, v.VendorType, v.CuisineType, mi.MenuID
         FROM Vendor v
         JOIN Menu m on v.VendorID = m.VendorID
         JOIN MenuItems mi on mi.MenuID = m.MenuID
-        WHERE v.VendorID = {} and m.MenuID = {};'''.format(vendor_id, menu_id)
+       ;'''
 
     cursor.execute(query)
     # grab the column headers from the returned data
@@ -170,4 +170,41 @@ def add_new_vendor():
     
     return 'Success!'
 
+@vendors.route('/vendors/<vendor_id>', methods=['PUT'])
+def update_vendor(vendor_id):
+    
+    # collecting data from the request object 
+    the_data = request.json
+    current_app.logger.info(the_data)
 
+    #extracting the variable
+    vendor_name = the_data['VendorName']
+    vendor_type = the_data['VendorType']
+    cuisine_type = the_data['CuisineType']
+    phone = the_data['Phone']
+    email = the_data['Email']
+    employee_id = the_data['EmployeeID']
+
+    # Constructing the query
+    query = 'update Vendor SET '
+    query += 'VendorName = "' + vendor_name + '", '
+    query += 'VendorType = "' + vendor_type + '", '
+    query += 'CuisineType = " ' + cuisine_type + '", '
+    query += 'Phone = " ' + phone + '", '
+    query += 'EmployeeID = " ' + str(employee_id) + '", '
+    query += 'Email = "' + email + '" WHERE VendorID = ' + str(vendor_id) + ';' 
+    current_app.logger.info(query)
+
+    # executing and committing the insert statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    
+    return 'Success!'
+
+@vendors.route('/vendors/<vendor_id>', methods=['DELETE'])
+def delete_vendor(vendor_id):
+    cursor = db.get_db().cursor()
+    cursor.execute('DELETE FROM Vendor WHERE VendorID = ' + str(vendor_id) + ';')
+    db.get_db().commit()
+    return 'Success!'
