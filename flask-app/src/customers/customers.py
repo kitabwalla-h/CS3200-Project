@@ -101,7 +101,7 @@ def delete_customer(CustomerID):
 
 
 # getting customer location
-@customers.route('/customers/get-location/<CustomerID>', methods=['GET'])
+@customers.route('/customers/location/<CustomerID>', methods=['GET'])
 def get_customer_location(CustomerID):
     cursor = db.get_db().cursor()
     cursor.execute('Select * from CustomerLocations where CustomerID = ' + str(CustomerID) + ';')
@@ -116,7 +116,7 @@ def get_customer_location(CustomerID):
     return the_response
 
 # updating customer location
-@customers.route('/customers/update-location/<CustomerID>', methods=['PUT'])
+@customers.route('/customers/location/<CustomerID>', methods=['PUT'])
 def update_customer_location(CustomerID):
     
     # collecting data from the request object 
