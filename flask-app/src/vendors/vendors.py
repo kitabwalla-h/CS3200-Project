@@ -31,6 +31,33 @@ def get_vendors():
 
     return jsonify(json_data)
 
+# get vendor id and employee id
+@vendors.route('/vendors/admin_details', methods=['GET'])
+def get_vendors_admin_details():
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for a list of products
+    cursor.execute('SELECT VendorName, VendorID, EmployeeID FROM Vendor')
+
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # create an empty dictionary object to use in 
+    # putting column headers together with data
+    json_data = []
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # for each of the rows, zip the data elements together with
+    # the column headers. 
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data)
+
+
 # get specific vendor details
 @vendors.route('/vendors/<vendor_id>', methods=['GET'])
 def get_vendor (vendor_id):
@@ -112,7 +139,7 @@ def get_menu_prices(vendor_id, menu_id):
 def get_menu_from_vendor():
     cursor = db.get_db().cursor()
     query = '''
-        SELECT v.VendorID, v.VendorName, v.VendorType, v.CuisineType, mi.MenuID
+        SELECT v.VendorID, v.VendorName, v.VendorType, v.CuisineType, mi.MenuID, mi.Name
         FROM Vendor v
         JOIN Menu m on v.VendorID = m.VendorID
         JOIN MenuItems mi on mi.MenuID = m.MenuID
