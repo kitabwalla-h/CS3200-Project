@@ -101,10 +101,10 @@ def delete_customer(CustomerID):
 
 
 # getting customer location
-@customers.route('/customers/<CustomerID>', methods=['GET'])
+@customers.route('/customers/get-location/<CustomerID>', methods=['GET'])
 def get_customer_location(CustomerID):
     cursor = db.get_db().cursor()
-    cursor.execute('Select * from CustomerLocations where CustomerID = {0}'.format(CustomerID))
+    cursor.execute('Select * from CustomerLocations where CustomerID = ' + str(CustomerID) + ';')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -116,7 +116,7 @@ def get_customer_location(CustomerID):
     return the_response
 
 # updating customer location
-@customers.route('/customers/<CustomerID>', methods=['PUT'])
+@customers.route('/customers/update-location/<CustomerID>', methods=['PUT'])
 def update_customer_location(CustomerID):
     
     # collecting data from the request object 
@@ -124,10 +124,10 @@ def update_customer_location(CustomerID):
     current_app.logger.info(the_data)
 
     #extracting the variable
-    street = the_data['street']
-    city = the_data['city']
-    state = the_data['state']
-    zipcode = the_data['zipcode']
+    street = the_data['Street']
+    city = the_data['City']
+    state = the_data['State']
+    zipcode = the_data['ZipCode']
 
     # Constructing the query
     query = 'update CustomerLocations SET '
