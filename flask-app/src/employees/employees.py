@@ -61,8 +61,8 @@ def add_new_employee():
     return 'Success!'
 
 # update employee details
-@employees.route('/employees/<EmployeeID>', methods=['PUT'])
-def update_employee(employee_id):
+@employees.route('/employees/<employeeID>', methods=['PUT'])
+def update_employee(employeeID):
     cursor = db.get_db().cursor()
 
     # collecting data from the request object 
@@ -77,22 +77,23 @@ def update_employee(employee_id):
     # constructing the query
     query = 'UPDATE HuskyEatzEmployee SET FirstName = %s, LastName = %s, Role = %s WHERE EmployeeID = %s'
 
-    cursor.execute(query, (first_name, last_name, role, employee_id))
+    cursor.execute(query, (first_name, last_name, role, employeeID))
     db.get_db().commit()
 
     return 'Success!'
     
 # Delete employee from the database
-@employees.route('/employees/<EmployeeID>', methods=['DELETE'])
-def delete_employee(employee_id):
+@employees.route('/employees/<employeeID>', methods=['DELETE'])
+def delete_employee(employeeID):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
     # use cursor to delete an employee
     query = 'DELETE FROM HuskyEatzEmployee WHERE EmployeeID = %s'
-    cursor.execute(query, (employee_id))
+    cursor.execute(query, (employeeID))
 
     # commit changes to the database
     db.get_db().commit()
 
     return 'Success!'
+
