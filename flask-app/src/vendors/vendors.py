@@ -111,10 +111,37 @@ def get_vendor_detail (cuisine_type):
 @vendors.route('/vendors/prices/<vendor_id>/<menu_id>',  methods=['GET'])
 def get_menu_prices(vendor_id, menu_id):
     cursor = db.get_db().cursor()
-    query = 'SELECT mi.Name, mi.Price, mi.Ingredients, mi.Availability, mi.Description, mi.AllergenInformation FROM Vendor v JOIN Menu m on v.VendorID = m.VendorID'
+    query = 'SELECT v.VendorID, v.VendorName, mi.Name, mi.Price, mi.Ingredients, mi.Availability, mi.Description, mi.AllergenInformation FROM Vendor v JOIN Menu m on v.VendorID = m.VendorID'
     query = query + ' JOIN MenuItems mi on mi.MenuID = m.MenuID'
     query = query + ' WHERE (v.VendorID = ' + str(vendor_id) + ' and m.MenuID = ' + str(menu_id)
     query = query + ') ORDER BY mi.Price DESC;'
+
+    cursor.execute(query)
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # create an empty dictionary object to use in 
+    # putting column headers together with data
+    json_data = []
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # for each of the rows, zip the data elements together with
+    # the column headers. 
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data)
+
+# get all menu items and menus
+@vendors.route('/vendors/prices/<menu_id>',  methods=['GET'])
+def get_menu_details(menu_id):
+    cursor = db.get_db().cursor()
+    query = 'SELECT v.VendorID, mi.Name, mi.Price, mi.Ingredients, mi.Availability, mi.Description, mi.AllergenInformation FROM Vendor v JOIN Menu m on v.VendorID = m.VendorID'
+    query = query + ' JOIN MenuItems mi on mi.MenuID = m.MenuID'
+    query = query + ' WHERE m.MenuID = ' + str(menu_id)
+    query = query + ' ORDER BY mi.Price DESC;'
 
     cursor.execute(query)
     # grab the column headers from the returned data
@@ -196,6 +223,7 @@ def add_new_vendor():
     db.get_db().commit()
     
     return 'Success!'
+
 
 @vendors.route('/vendors/<vendor_id>', methods=['PUT'])
 def update_vendor(vendor_id):
