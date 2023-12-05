@@ -144,4 +144,34 @@ def add_new_order_menuitesm():
     
     return 'Success!'
 
+@orders.route('/orders/pending/<vendor_id>', methods=['GET'])
+def get_order_status(vendor_id):
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    query = 'SELECT o.OrderID, o.VendorID, o.CustomerID, o.DeliveryPersonID, os.Status FROM `Order` o JOIN OrderDetails od on o.OrderID = od.OrderID'
+    query = query + ' JOIN OrderStatus os on od.OrderDetailsID = os.OrderDetailsID'
+    query = query + ' WHERE (o.VendorID = ' + str(vendor_id)
+    query = query + ' AND os.Status = "pending");'
+
+    # use cursor to query the database for a list of products
+    cursor.execute(query)
+
+    # grab the column headers from the returned data
+    column_headers = [x[0] for x in cursor.description]
+
+    # create an empty dictionary object to use in 
+    # putting column headers together with data
+    json_data = []
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # for each of the rows, zip the data elements together with
+    # the column headers. 
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data)
+
 
