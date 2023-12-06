@@ -1,3 +1,10 @@
+# Husky Eatz by Hungry Huskyz
+Hungry Huskyz have developed an app called Husky Eatz in order to serve the students at Northeastern. This app is similar to DoorDash or UberEats, however, it gives students access to ordering Dining Hall food to their home so they cant take advantage of dining dollars without having to leave their home. The app will serve 4 main groups:
+1. Customers - Students
+2. Vendors - Restaurants and Dining Halls
+3. Delivery Personnel
+4. Husky Eatz Employees
+
 # MySQL + Flask Boilerplate Project
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
