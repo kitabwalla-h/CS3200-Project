@@ -35,6 +35,7 @@ def get_customer(CustomerID):
     the_response.mimetype = 'application/json'
     return the_response
 
+# Adds a customer
 @customers.route('/customers', methods=['POST'])
 def add_new_customer():
     
@@ -63,6 +64,7 @@ def add_new_customer():
     
     return 'Success!'
 
+# Updates a customers information based off of their id
 @customers.route('/customers/<CustomerID>', methods=['PUT'])
 def update_customer(CustomerID):
     
@@ -92,6 +94,7 @@ def update_customer(CustomerID):
     
     return 'Success!'
 
+# Deletes the customer with the given id
 @customers.route('/customers/<CustomerID>', methods=['DELETE'])
 def delete_customer(CustomerID):
     cursor = db.get_db().cursor()
