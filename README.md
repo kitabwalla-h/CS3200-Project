@@ -15,6 +15,6 @@ This repo contains a boilerplate setup for spinning up 3 Docker containers:
 1. Build the images with `docker compose build`
 1. Start the containers with `docker compose up`.  To run in detached mode, run `docker compose up -d`. 
 
-**Our Additions** We also found that we needed to run the db_bootstrap.sql file in Datagrip while connected to localhost:3200 to allow appsmith to find the husky_eatz database.
+**Our Additions:** We also found that we needed to run the db_bootstrap.sql file in Datagrip while connected to localhost:3200 to allow appsmith to find the husky_eatz database.
 
 
