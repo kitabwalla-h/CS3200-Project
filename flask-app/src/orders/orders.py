@@ -145,14 +145,14 @@ def add_new_order_menuitesm():
     return 'Success!'
 
 @orders.route('/orders/pending/<vendor_id>', methods=['GET'])
-def get_order_status(vendor_id):
+def get_pending_orders(vendor_id):
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
     query = 'SELECT o.OrderID, o.VendorID, o.CustomerID, o.DeliveryPersonID, os.Status FROM `Order` o JOIN OrderDetails od on o.OrderID = od.OrderID'
     query = query + ' JOIN OrderStatus os on od.OrderDetailsID = os.OrderDetailsID'
-    query = query + ' WHERE (o.VendorID = ' + str(vendor_id)
-    query = query + ' AND os.Status = "pending");'
+    query = query + ' WHERE o.VendorID = ' + str(vendor_id)
+    query = query + ' ;'
 
     # use cursor to query the database for a list of products
     cursor.execute(query)
